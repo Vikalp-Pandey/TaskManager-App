@@ -18,3 +18,8 @@ class TaskDetail(DetailView):
     context_object_name="task" 
     template_name="App/task_detail.html"
     
+class TaskCreate(CreateView):
+    model=Task
+    fields="__all__"
+    # fields=['title','description']
+    success_url= reverse_lazy('tasks')
