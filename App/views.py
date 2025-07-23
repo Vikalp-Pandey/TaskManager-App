@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView,UpdateView
 
 from .models import Task
 
@@ -23,3 +23,12 @@ class TaskCreate(CreateView):
     fields="__all__"
     # fields=['title','description']
     success_url= reverse_lazy('tasks')
+    # ? Note: Django provides built ModelForms for all the models we created. 
+    # ?We can override the fields in modelForms by specifying fields attribute.
+
+class TaskUpdate(UpdateView):
+    model=Task
+    fields="__all__"
+    success_url= reverse_lazy('tasks')
+
+    
