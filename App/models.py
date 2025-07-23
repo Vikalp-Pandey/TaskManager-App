@@ -14,4 +14,6 @@ class Task(models.Model):
     
     class Meta:
         ordering=['complete']
-        # * Whenever we return multiple values,order it by 'complete' value
+        # ? By default,  Incompleted Tasks will be returned first,then completed Tasks.
+        # ? We can also override it by providing our custom field in queryset.
+        
