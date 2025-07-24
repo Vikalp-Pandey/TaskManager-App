@@ -24,18 +24,19 @@ class RegisterPage(FormView):
     template_name='App/register.html'
     form_class=UserCreationForm
     redirect_authenticated_user=True
-    # success_url=reverse_lazy('login')
+    success_url=reverse_lazy('login')
 
     def form_valid(self,form):
         user=form.save()
         if user is not None:
+            # *Log the user in immediately after registration
             login(self.request, user)
         return super(RegisterPage,self).form_valid(form)
 
-    def get(self, *args, **kwargs):
-        if self.request.user.is_authenticated:
-            return redirect('login')
-        return super(RegisterPage,self).get(*args, **kwargs)
+    # def get(self, *args, **kwargs):
+    #     if self.request.user.is_authenticated:
+    #         return redirect('login')
+    #     return super(RegisterPage,self).get(*args, **kwargs)
     
 
 class TaskList(LoginRequiredMixin,ListView):
@@ -47,6 +48,11 @@ class TaskList(LoginRequiredMixin,ListView):
         context=super().get_context_data(**kwargs)
         context['tasks']=context['tasks'].filter(user=self.request.user)
         context['count']=context['tasks'].filter(complete=False).count()
+        search_input=self.request.GET.get('search-area') or ' '
+        if search_input:
+            context['tasks']=context['tasks'].filter(title__icontains=search_input, title__istartswith=search_input)
+
+        context['search_input']=search_input 
         return context
     
 class TaskDetail(LoginRequiredMixin, DetailView): 
