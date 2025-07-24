@@ -1,15 +1,38 @@
+{% if request.user.is_authenticated %}
+    <p>{{ request.user }}</p>
+    <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+    </form>
+    <!--  *Django's LogoutView (and many similar logout implementations) expects a POST request 
+          *for security reasons to prevent accidental logouts or malicious cross-site request forgery (CSRF) attacks.
+          *An <a> tag, by default, makes a GET request. -->
+{% else %}
+    <a href="{% url 'login' %}">Login</a>     
+{% endif %}
+
+<hr>
+
 <h1>My To Do List</h1>
-<a href="{% url 'task-create' %}">Add Task</a>
-<br>
-<br>
-<br>
+
+<form method="GET">
+    <input type="text" name="search-area" value="{{search_input}}">
+    <input type="submit" value="Search">
+</form>
 
 <table border="1" cellspacing="0" cellpadding="20">
     <tr>
-        <th>Items</th>
-        <th></th>
-        <th></th>
+        <th colspan="4">Items</th>
+        
     </tr>
+    
+
+    <tr>
+        <td colspan="4" style="text-align: center;">
+            <a href="{% url 'task-create' %}">Add Task</a>
+        </td>
+    </tr>
+
     <!--! tasks is context object name -->
     {% for task in tasks %}
 
@@ -17,10 +40,10 @@
         <td>
             {{ task.title }}
         </td>
-        <td>
+        <!-- <td>
             <a href="{% url 'task' task.id %}">View</a>
             
-        </td>
+        </td> -->
         <td>
             <a href="{% url 'task-update' task.id %}">Edit</a>
             
@@ -34,5 +57,6 @@
     {% empty %}
        <h3>No Items in list</h3>
     {% endfor %}
-
+     
+    
 </table>
