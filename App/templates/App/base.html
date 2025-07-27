@@ -1,0 +1,164 @@
+{# App/templates/App/base.html #}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>{% block title %}To-Do List{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom CSS for gradients and animations */
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            /* Animated background gradient */
+            background: linear-gradient(270deg, #e0f2fe, #bfdbfe, #93c5fd, #60a5fa);
+            background-size: 800% 800%;
+            animation: gradientAnimation 15s ease infinite;
+        }
+
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        header {
+            background: linear-gradient(to right, #3b82f6, #2563eb); /* Blue gradient for header */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #10b981, #059669); /* Green gradient for primary buttons */
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(to right, #059669, #10b981);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(to right, #ef4444, #dc2626); /* Red gradient for secondary buttons */
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(to right, #dc2626, #ef4444);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-tertiary {
+            background: linear-gradient(to right, #3b82f6, #2563eb); /* Blue gradient for tertiary buttons */
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-tertiary:hover {
+            background: linear-gradient(to right, #2563eb, #3b82f6);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        main {
+            flex-grow: 1;
+            padding: 1.5rem;
+        }
+
+        footer {
+            background: #1f2937; /* Darker gray for footer */
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+    
+        .card {
+            background-color: #ffffff;
+            border-radius: 1.5rem; /* Even more rounded corners */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15); /* Stronger shadow */
+            padding: 3rem; /* More padding */
+            margin-top: 2rem;
+            animation: fadeIn 1s ease-out forwards; /* Fade-in animation for the card */
+            opacity: 0; /* Start invisible for fade-in */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .welcome-text {
+            color: #1a202c; /* Darker text for better contrast */
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.05); /* Subtle text shadow */
+        }
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 768px) {
+            .card {
+                padding: 2rem;
+                margin-top: 1rem;
+            }
+            .welcome-text {
+                font-size: 3rem; /* Adjust font size for smaller screens */
+            }
+            .text-xl {
+                font-size: 1.125rem; /* Adjust paragraph font size */
+            }
+            .btn-primary, .btn-tertiary {
+                padding: 0.75rem 1.5rem; /* Smaller padding for buttons */
+                font-size: 0.9rem;
+            }
+            .space-x-4 > *:not([hidden]) ~ *:not([hidden]) {
+                margin-left: 0.75rem; /* Adjust button spacing */
+            }
+            .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            {# The logo always links to the 'tasks' page if logged in, otherwise it should ideally link to the welcome page #}
+            <a href="{% if request.user.is_authenticated %}{% url 'tasks' %}{% else %}{% url 'welcome' %}{% endif %}" class="text-3xl font-extrabold tracking-wide rounded-lg p-2 transition duration-300 ease-in-out">
+                Task Manager App
+            </a>
+            <nav class="flex items-center space-x-4">
+                {% if request.user.is_authenticated %}
+                    <span class="text-white text-lg font-medium hidden sm:block">Hello, {{ request.user.username }}</span>
+                    <form action="{% url 'logout' %}"  method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-secondary text-white px-6 py-3 rounded-full font-semibold">Logout</button>  
+                    </form>
+                    
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn-primary text-white px-6 py-3 rounded-full font-semibold">Login</a>
+                    <a href="{% url 'register' %}" class="btn-tertiary text-white px-6 py-3 rounded-full font-semibold">Register</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-6 flex-grow flex items-center justify-center">
+        {% block content %}
+            {# This block is intentionally left empty in base.html. #}
+            {# Extending templates like task_list.html or welcome.html will fill it. #}
+        {% endblock content %}
+    </main>
+
+    <footer class="text-white text-center p-4">
+        <p class="text-lg">&copy; 2025 To-Do List App. All rights reserved.</p>
+    </footer>
+</body>
+</html>
