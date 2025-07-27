@@ -1,4 +1,9 @@
+App/__pycache__/
+App/migrations/0002_rename_create_task_created_at.py
+App/migrations/0003_alter_task_options.py
+App/migrations/0004_userprofile.py
+App/migrations/__pycache__/0002_rename_create_task_created_at.cpython-313.pyc
+App/migrations/__pycache__/0003_alter_task_options.cpython-313.pyc
+App/migrations/__pycache__/0004_userprofile.cpython-313.pyc
 db.sqlite3
-App/__pycache__/urls.cpython-313.pyc
-App/__pycache__/views.cpython-313.pyc
-to_DoList/__pycache__/settings.cpython-313.pyc
+to_DoList/__pycache__/  
