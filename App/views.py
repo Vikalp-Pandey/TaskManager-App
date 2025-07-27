@@ -1,5 +1,6 @@
 from django.utils import timezone
-
+from django.shortcuts import get_object_or_404, redirect
+from .models import Task
 from django.http import HttpResponse
 from django.shortcuts import render,redirect
 from django.urls import reverse_lazy
@@ -20,15 +21,11 @@ from .forms import CustomUserCreationForm
 import pytz
 from django.shortcuts import get_object_or_404, redirect
 from .models import Task
-
-
-
 # Create your views here.
 class CustomLoginView(LoginView):
     template_name='App/login.html'
     fields="__all__"
     redirect_authenticated_user=True
-    
     # *Creating a custom success_url 
     def get_success_url(self):
         return reverse_lazy('tasks')
@@ -88,7 +85,7 @@ class TaskList(LoginRequiredMixin,ListView):
         if search_input:  # Only apply filter if search_input is non-empty
             context['tasks'] = context['tasks'].filter(title__icontains=search_input)
         context['search_input'] = search_input
-
+        
         # Use user profile timezone if available, else fallback to UTC
         user_timezone = 'UTC'
         if self.request.user.is_authenticated:
@@ -134,21 +131,3 @@ class TaskDelete(LoginRequiredMixin, DeleteView):
     success_url=reverse_lazy('tasks')
 
 
-from django.shortcuts import get_object_or_404, redirect
-from .models import Task
-
-def task_toggle_complete(request, pk):
-    task = get_object_or_404(Task, id=pk)
-    if request.method == 'POST':
-        task.complete = not task.complete
-        task.save()
-    return redirect('tasks')
-
-class HomeView(View):
-    def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            # If user is logged in, redirect to their task list
-            return redirect('tasks')
-        else:
-            # If user is not logged in, show the welcome page
-            return render(request, 'App/welcome.html')
