@@ -85,7 +85,7 @@ class TaskList(LoginRequiredMixin,ListView):
         if search_input:  # Only apply filter if search_input is non-empty
             context['tasks'] = context['tasks'].filter(title__icontains=search_input)
         context['search_input'] = search_input
-        
+
         # Use user profile timezone if available, else fallback to UTC
         user_timezone = 'UTC'
         if self.request.user.is_authenticated:
@@ -131,3 +131,11 @@ class TaskDelete(LoginRequiredMixin, DeleteView):
     success_url=reverse_lazy('tasks')
 
 
+class HomeView(View):
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            # If user is logged in, redirect to their task list
+            return redirect('tasks')
+        else:
+            # If user is not logged in, show the welcome page
+            return render(request, 'App/welcome.html')
