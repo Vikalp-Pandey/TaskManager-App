@@ -131,6 +131,20 @@ class TaskDelete(LoginRequiredMixin, DeleteView):
     success_url=reverse_lazy('tasks')
 
 
+def task_toggle_complete(request, pk):
+    task = get_object_or_404(Task, id=pk)
+    if request.method == 'POST':
+        task.complete = not task.complete
+        task.save()
+    return redirect('tasks')
+
+class TaskToggleCompleteView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        task = get_object_or_404(Task, id=pk, user=self.request.user)
+        task.complete = not task.complete
+        task.save()
+        return redirect('tasks')
+
 class HomeView(View):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
