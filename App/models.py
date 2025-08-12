@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from django.contrib.auth.models import User
 import pytz
@@ -35,10 +36,15 @@ class UserProfile(models.Model):
         default='UTC',
         help_text="User's timezone (e.g., Asia/Kolkata for India)"
     )
+    
+    email_verified = models.BooleanField(default=False)
+    email_verification_token = models.UUIDField(default=uuid.uuid4, editable=False)
+    
 
-    def __str__(self):
-        return f"{self.user.username}'s profile ({self.country})"
 
     class Meta:
         verbose_name = "User Profile"
         verbose_name_plural = "User Profiles"
+
+    def __str__(self):
+        return f"{self.user.username}'s profile ({self.country})"    
