@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "App"
+    "App",
+    "django_celery_results",  # For storing Celery task results
 ]
 
 MIDDLEWARE = [
